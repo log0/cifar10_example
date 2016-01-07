@@ -44,7 +44,7 @@ for i, source_file in enumerate(source_files):
     draw = ImageDraw.Draw(image)
 
     x0y0x1y1 = random_bounding_circle()
-    draw.ellipse(x0y0x1y1, fill = 'red')
+    draw.rectangle(x0y0x1y1, fill = 'red')
 
     (x0, y0), (x1, y1) = x0y0x1y1
 

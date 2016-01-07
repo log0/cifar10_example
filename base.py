@@ -6,12 +6,8 @@ import pandas as pd
 import scipy
 import scipy.ndimage
 
-from keras.models import Sequential
-from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers.convolutional import Convolution2D, MaxPooling2D
-from keras.optimizers import SGD, Adam, RMSprop
-from keras.utils import np_utils
 from sklearn.cross_validation import *
+from sklearn.decomposition import *
 from sklearn.metrics import *
 from sklearn.preprocessing import LabelEncoder
 
@@ -44,15 +40,37 @@ for i, train_file in enumerate(train_files):
     ids.append(file_id)
 ids = np.array(ids).astype(int)
 train_data = np.array(train_data)
-train_data = np.transpose(train_data, axes = (0, 3, 1, 2))
+# train_data = np.transpose(train_data, axes = (0, 3, 1, 2))
+train_data = train_data.reshape((train_data.shape[0], np.prod(train_data.shape[1:])))
 train_data = train_data / 255
 train_labels = np.array(train_labels)
 train_labels = train_labels / 32
 
+
+pca = PCA(n_components = 147)
+train_data = pca.fit_transform(train_data)
+
+print(train_data.shape)
+
+train_data = train_data.reshape((train_data.shape[0], 3, 7, 7))
+
+print(dir(pca))
+print(pca.explained_variance_ratio_)
+
+# import sys
+# sys.exit()
+
 X_train, X_cv, Y_train, Y_cv, ids_train, ids_cv = train_test_split(train_data, train_labels, ids, test_size = 0.20)
 
+from keras.models import Sequential
+from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.layers.convolutional import Convolution2D, MaxPooling2D
+from keras.optimizers import SGD, Adam, RMSprop
+from keras.utils import np_utils
+
 model = Sequential()
-model.add(Convolution2D(32, 3, 3, border_mode = 'same', input_shape = (3, 32, 32)))
+# model.add(Convolution2D(32, 3, 3, border_mode = 'same', input_shape = (3, 32, 32)))
+model.add(Convolution2D(32, 3, 3, border_mode = 'same', input_shape = (3, 7, 7)))
 model.add(Activation('relu'))
 model.add(Convolution2D(32, 3, 3, border_mode = 'same'))
 model.add(Activation('relu'))
@@ -74,7 +92,7 @@ model.add(Dense(4))
 model.add(Activation('softmax'))
 
 sgd = SGD(lr=0.1, decay=1e-7, momentum=0.2, nesterov=True)
-model.compile(loss='categorical_crossentropy', optimizer=sgd)
+model.compile(loss='binary_crossentropy', optimizer=sgd)
 
 model.fit(X_train, Y_train, nb_epoch = 20, batch_size = 50, show_accuracy = True, verbose = 1, validation_split = 0.05)
 Y_cv_pred = model.predict(X_cv, batch_size = 50, verbose = 1)
