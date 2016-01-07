@@ -2,6 +2,7 @@ import re
 import csv
 import glob
 import numpy as np
+import pandas as pd
 import scipy
 import scipy.ndimage
 
@@ -41,6 +42,7 @@ for i, train_file in enumerate(train_files):
     label = train_labels_map[file_id]
     train_labels.append(label)
     ids.append(file_id)
+ids = np.array(ids).astype(int)
 train_data = np.array(train_data)
 train_data = np.transpose(train_data, axes = (0, 3, 1, 2))
 train_data = train_data / 255
@@ -79,9 +81,14 @@ Y_cv_pred = model.predict(X_cv, batch_size = 50, verbose = 1)
 
 print('Y_cv.shape: ', Y_cv.shape)
 print('Y_cv_pred.shape: ', Y_cv_pred.shape)
+print('ids_cv.shape:' , ids_cv.shape)
 
-print('Y_cv: ', Y_cv[:20] * 32)
-print('Y_cv_pred: ', np.round(Y_cv_pred[:20] * 32))
+some_Y_cv = pd.DataFrame(np.round(Y_cv[:20] * 32)).set_index(ids_cv[:20])
+some_Y_cv_pred = pd.DataFrame(np.round(Y_cv_pred[:20] * 32)).set_index(ids_cv[:20])
+some = pd.concat([some_Y_cv, some_Y_cv_pred], axis = 1)
+# print('Y_cv: \n', some_Y_cv)
+# print('Y_cv_pred: \n', some_Y_cv_pred)
+print(some)
 
 Y_cv *= 32
 Y_cv_pred *= 32
