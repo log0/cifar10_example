@@ -91,10 +91,10 @@ model.add(Dropout(0.25))
 model.add(Dense(4))
 model.add(Activation('softmax'))
 
-sgd = SGD(lr=0.1, decay=1e-7, momentum=0.2, nesterov=True)
+sgd = SGD(lr=0.2, decay=1e-7, momentum=0.2, nesterov=True)
 model.compile(loss='binary_crossentropy', optimizer=sgd)
 
-model.fit(X_train, Y_train, nb_epoch = 20, batch_size = 50, show_accuracy = True, verbose = 1, validation_split = 0.05)
+model.fit(X_train, Y_train, nb_epoch = 30, batch_size = 50, show_accuracy = True, verbose = 1, validation_split = 0.05)
 Y_cv_pred = model.predict(X_cv, batch_size = 50, verbose = 1)
 
 print('Y_cv.shape: ', Y_cv.shape)
@@ -116,7 +116,7 @@ for i, id in enumerate(ids_cv):
     image = Image.open(filepath)
     draw = ImageDraw.Draw(image)
     xys = ((Y_cv_pred[i][0], Y_cv_pred[i][1]), (Y_cv_pred[i][2], Y_cv_pred[i][3]))
-    draw.ellipse(xys, fill = 'blue')
+    draw.ellipse(xys, fill = 'orange')
 
     save_filepath = 'data/predictions/%s.png' % (id)
     image.save(save_filepath)
