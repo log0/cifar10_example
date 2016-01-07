@@ -17,7 +17,8 @@ def random_bounding_circle():
 
     x0 = random.randint(0, IMAGE_WIDTH - MAX_RADIUS)
     y0 = random.randint(0, IMAGE_HEIGHT - MAX_RADIUS)
-    radius = random.randint(1, MAX_RADIUS)
+    # radius = random.randint(1, MAX_RADIUS)
+    radius = random.randint(MAX_RADIUS, MAX_RADIUS)
     x1 = x0 + radius
     y1 = y0 + radius
 
