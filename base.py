@@ -52,22 +52,21 @@ train_labels = train_labels / 32
 X_train, X_cv, Y_train, Y_cv, ids_train, ids_cv = train_test_split(train_data, train_labels, ids, test_size = 0.20)
 
 model = Sequential()
-model.add(Convolution2D(32, 3, 3, border_mode = 'same', input_shape = (3, 32, 32)))
-model.add(Activation('relu'))
-model.add(Convolution2D(32, 3, 3, border_mode = 'same'))
-model.add(Activation('relu'))
+model.add(Convolution2D(4, 3, 3, border_mode = 'same', input_shape = (3, 32, 32)))
+model.add(Activation('tanh'))
+model.add(Convolution2D(4, 3, 3, border_mode = 'same'))
+model.add(Activation('tanh'))
 model.add(MaxPooling2D(pool_size = (2, 2)))
 model.add(Dropout(0.25))
 
 model.add(Flatten())
 model.add(Dense(128))
-model.add(Activation('relu'))
+model.add(Activation('tanh'))
 model.add(Dropout(0.25))
 model.add(Dense(4))
 model.add(Activation('softmax'))
 
-sgd = SGD(lr=0.1, decay=1e-7, momentum=0.2, nesterov=True)
-# model.compile(loss='categorical_crossentropy', optimizer=sgd)
+sgd = SGD(lr=0.001, decay=1e-7, momentum=0.2, nesterov=True)
 model.compile(loss='mean_squared_error', optimizer=sgd)
 
 model.fit(X_train, Y_train, nb_epoch = 20, batch_size = 50, show_accuracy = True, verbose = 1, validation_split = 0.05)
