@@ -13,12 +13,13 @@ def random_bounding_circle():
     IMAGE_WIDTH = 32
     IMAGE_HEIGHT = 32
 
-    MAX_RADIUS = 5
+    MAX_RADIUS = 1
 
     x0 = random.randint(0, IMAGE_WIDTH - MAX_RADIUS)
     y0 = random.randint(0, IMAGE_HEIGHT - MAX_RADIUS)
-    # radius = random.randint(1, MAX_RADIUS)
-    radius = random.randint(MAX_RADIUS, MAX_RADIUS)
+    radius = 1
+    # radius = random.randint(1, 1)
+    # radius = random.randint(MAX_RADIUS, MAX_RADIUS)
     x1 = x0 + radius
     y1 = y0 + radius
 
@@ -29,7 +30,7 @@ INPUT_DIR = 'data/source/*'
 OUTPUT_DIR = 'data/train/'
 LABELS_PATH = 'data/labels.csv'
 
-N_COUNT = 10000
+N_COUNT = 1000
 
 source_data = []
 source_files = glob.glob(INPUT_DIR)
